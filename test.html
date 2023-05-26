@@ -172,8 +172,10 @@
     var moveRight = false;
     var moveUp = false;
     var moveDown = false;
-    var shiftUp = false;
-    var shiftDown = false;
+    var rotateLeft = false;
+    var rotateRight = false;
+    var rotateUp = false;
+    var rotateDown = false;
 
 
     var onKeyDown = function(event) {
@@ -195,6 +197,18 @@
       break;
     case 17: // Ctrl
       moveDown = true;
+      break;
+    case 37: //left arrow
+      rotateLeft = true;
+      break;
+    case 39: //right arrow
+      rotateRight = true;
+      break;
+    case 38: //up arrow
+      rotateUp = true;
+      break;
+    case 40: //down arrow
+      rotateDown = true;
       break;
   }
 };
@@ -220,6 +234,18 @@ var onKeyUp = function(event) {
     case 17: 
       moveDown = false;
       break;
+    case 37: 
+      rotateLeft = false;
+      break;
+    case 39:
+      rotateRight = false;
+      break;
+    case 38: 
+      rotateUp = false;
+      break;
+    case 40:
+      rotateDown = false;
+      break;
   }
 };
 
@@ -231,6 +257,7 @@ var angle = 0;
 var MyUpdateLoop = function() {
   var delta = clock.getDelta();
 
+  //WASD controls
   if(moveForward)
       {
         Pos.x+=Dir.x*speed*delta;
@@ -243,23 +270,53 @@ var MyUpdateLoop = function() {
       }
       if(moveLeft)
       {
+        var left = new THREE.Vector3(Dir.z, 0, -Dir.x);
+        left.normalize();
+        Pos.x += left.x*speed*delta;
+        Pos.z += left.z*speed*delta;
+        
+
+      }
+      if(moveRight)
+      {
+        var right = new THREE.Vector3(-Dir.z,0,Dir.x);
+        right.normalize();
+        Pos.x += right.x*speed*delta;
+        Pos.z += right.z*speed*delta;
+      }
+
+      //Space bar + ctrl
+       if (moveUp) {
+        Pos.y+=speed*delta;
+       }
+       if (moveDown) {
+        Pos.y-=speed*delta;
+      }
+
+      //Key arrow controls
+      if (rotateLeft)
+      {
         angle+=speed*delta;
         Dir.x=Math.sin(angle);
         Dir.z=Math.cos(angle);
         Dir.normalize();
       }
-      if(moveRight)
+      if(rotateRight)
       {
         angle-=speed*delta;
         Dir.x=Math.sin(angle);
         Dir.z=Math.cos(angle);
         Dir.normalize();
       }
-       if (moveUp) {
-        Pos.y+=speed*delta;
-       }
-       if (moveDown) {
-        Pos.y-=speed*delta;
+      if(rotateUp)
+      {
+        Dir.y += speed*delta;
+        Dir.normalize();
+      }
+      if(rotateDown)
+      {
+        Dir.y -=speed*delta;
+        Dir.normalize();
       }
 
   
