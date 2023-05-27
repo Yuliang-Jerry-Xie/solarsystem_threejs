@@ -14,6 +14,20 @@
   <script src="https://cdn.jsdelivr.net/npm/three/examples/js/loaders/GLTFLoader.js"></script>
   <script>
 
+  
+
+var activeCamera;
+
+
+function switchCamera(){
+  if(activeCamera === camera){
+    activeCamera = camera2;
+  } else {
+    activeCamera = camera;
+  }
+
+}
+
     function createPlanet(planetData) {
       const planet = new THREE.Object3D();
 
@@ -90,6 +104,7 @@
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.set(0, 0, 15);
+    activeCamera = camera;
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
@@ -322,14 +337,23 @@ var MyUpdateLoop = function() {
   camera2.lookAt(Pos.x + Dir.x, Pos.y + Dir.y, Pos.z + Dir.z);
   camera2.updateProjectionMatrix();
 
-  renderer.render(scene, camera2);
+  renderer.render(scene, activeCamera);
 
   requestAnimationFrame(MyUpdateLoop);
+};
+
+var onSwitch = function(event){
+  if(event.keyCode === 191) // '/' key
+  {
+    switchCamera();
+  }
 };
 
 
 document.addEventListener('keydown', onKeyDown, false);
 document.addEventListener('keyup', onKeyUp, false);
+document.addEventListener('keydown', onSwitch, false);
+
 
 requestAnimationFrame(MyUpdateLoop);
 
